@@ -2,11 +2,23 @@
 
 
 //constant
-
+//将数字设置成常量
+CANVAS_HEIGHT=600;
+CANVAS_WIDTH=600;
+CANVAS_BACKGROUND_COLOR= "rgba(255,255,0,0.3)"
 
 
 // model
-
+class Game{
+    constructor() {
+        this.data=[];
+        this.initializeData();
+    }
+    initializeData(){
+        this.data=[];
+        
+    }
+}
 
 
 // view
@@ -16,9 +28,9 @@ class View{
         this.initializeContainers();
     }
     initializeContainers(){
-        this.container.style.width = 600;
-        this.container.style.height = 600;
-        this.container.style.backgroundColor = "rgba(90,80,70,0.3)";
+        this.container.style.width = CANVAS_WIDTH;
+        this.container.style.height = CANVAS_HEIGHT;
+        this.container.style.backgroundColor = CANVAS_BACKGROUND_COLOR;
     }
 }
 
