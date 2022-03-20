@@ -92,7 +92,48 @@ class Game {
         //给这个数组赋值2
         this.data[position[0]][position[1]] = 2;
     }
+
+    /**
+     *
+     * @param {Array} arr 一个n*n的数组，也就是最开始创建的data[]
+     * @description 方块移动
+     */
+    shiftBlock(arr) {
+        arr = this.data;
+        for (let i = 0; i < BLOCK_QUANTITY; i++) {
+            //向左
+            //先动的
+            let ahead = 1;
+            //后动的
+            let behind = 0;
+            for (; ahead < BLOCK_QUANTITY; ahead++) {
+                if (arr[i][behind] == null && arr[i][ahead] == null) {
+
+                } else if (arr[i][behind] == null && arr[i][ahead] != null) {
+                    arr[i][behind] = arr[i][ahead];
+                    arr[i][ahead] = null;
+                } else if (arr[i][behind] != null && arr[i][ahead] == null) {
+
+                } else if (arr[i][behind] != null && arr[i][ahead] != null && arr[i][behind] == arr[i][ahead]) {
+                    arr[i][behind] *= 2;
+                    arr[i][ahead] = null;
+                } else if (arr[i][behind] != null && arr[i][ahead] != null && arr[i][behind] != arr[i][ahead]) {
+                    behind++;
+                }
+            }
+        }
+        this.data = arr;
+
+    }
+
+
+
+
+
+
 }
+
+
 
 
 // view
@@ -117,7 +158,7 @@ class View {
         this.container.style.display = "inline-block";
     }
     /**
-     * 画出方块
+     * 画出方块及背景色
      */
     drawGame() {
         for (let i = 0; i < BLOCK_QUANTITY; i++) {
@@ -129,6 +170,14 @@ class View {
                 }
             }
         }
+    }
+
+    /**
+     * 更新block
+    */
+    refreshBlock() {
+        this.container.innerHTML="";
+        this.drawGame();
     }
     /**
      *
@@ -174,6 +223,15 @@ class View {
          *
         */
         span.style.lineHeight = /*`${BLOCK_SIZE}px`*/BLOCK_SIZE / FONTSIZE;
+        /**
+         * 他用的方法
+         * span.style.position="absolute";
+         * span.style.top=(BLOCK_SIZE-span.offsetHeight)/2;
+         * span.style.left=(BLOCK_SIZE-span.offsetWidth)/2;
+         * block的高-文字的高的差的二分之一，也就是文字顶部离block边框的距离，水平居中的方法同理
+         */
+
+
         //设置文本大小
         span.style.fontSize = FONTSIZE;
         //设置文字颜色
