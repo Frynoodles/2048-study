@@ -13,11 +13,13 @@ GAME_SIZE = 4;
 //block大小
 BLOCK_SIZE = 150;
 //block背景颜色
-BLOCK_BACKGROUND_COLOR = "rgba(100,200,200,0.6)";
+BLOCK_BACKGROUND_COLOR = "rgba(248,248,255,0.6)";
 //block有数字时的颜色
-BLOCK_FRONT_COLOR = "rgba(200,100,100,0.8)";
+BLOCK_FRONT_COLOR = "rgba(0,206,209,0.5)";
 //文字大小
 FONTSIZE = 80;
+//文字颜色
+TEXT_COLOR = "rgbA(230,0,0,0.5)";
 
 // Global Utility Function
 
@@ -168,6 +170,8 @@ class View {
         span.style.lineHeight = /*`${BLOCK_SIZE}px`*/BLOCK_SIZE / FONTSIZE;
         //设置文本大小
         span.style.fontSize = FONTSIZE;
+        //设置文字颜色
+        span.style.color = TEXT_COLOR;
         span.appendChild(text);
         block.appendChild(span);
     }
