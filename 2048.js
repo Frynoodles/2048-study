@@ -9,7 +9,7 @@ CANVAS_WIDTH = 650;
 //画布背景颜色
 CANVAS_BACKGROUND_COLOR = "rgba(255,100,0,0.6)";
 //block数量
-GAME_SIZE = 4;
+BLOCK_QUANTITY = 4;
 //block大小
 BLOCK_SIZE = 150;
 //block背景颜色
@@ -20,6 +20,12 @@ BLOCK_FRONT_COLOR = "rgba(0,206,209,0.5)";
 FONTSIZE = 80;
 //文字颜色
 TEXT_COLOR = "rgbA(230,0,0,0.5)";
+//间隔大小
+PADDING_SIZE = (CANVAS_HEIGHT - BLOCK_QUANTITY * BLOCK_SIZE) / (BLOCK_QUANTITY + 1)
+
+
+
+
 
 // Global Utility Function
 
@@ -56,9 +62,9 @@ class Game {
      */
     initializeData() {
         this.data = [];
-        for (let i = 0; i < GAME_SIZE; i++) {
+        for (let i = 0; i < BLOCK_QUANTITY; i++) {
             let temp = [];
-            for (let j = 0; j < GAME_SIZE; j++) {
+            for (let j = 0; j < BLOCK_QUANTITY; j++) {
                 temp.push(null);
             }
             this.data.push(temp);
@@ -73,8 +79,8 @@ class Game {
     generateNewBlock() {
         //首先搜集所有空的位置
         let emptyBlock = [];
-        for (let i = 0; i < GAME_SIZE; i++) {
-            for (let j = 0; j < GAME_SIZE; j++) {
+        for (let i = 0; i < BLOCK_QUANTITY; i++) {
+            for (let j = 0; j < BLOCK_QUANTITY; j++) {
                 if (this.data[i][j] == null) {
                     //找出空的数组(block)并放进emptyBlock
                     emptyBlock.push([i, j]);
@@ -114,8 +120,8 @@ class View {
      * 画出方块
      */
     drawGame() {
-        for (let i = 0; i < GAME_SIZE; i++) {
-            for (let j = 0; j < GAME_SIZE; j++) {
+        for (let i = 0; i < BLOCK_QUANTITY; i++) {
+            for (let j = 0; j < BLOCK_QUANTITY; j++) {
                 //画出block的底色
                 this.drawBackgroundBlock(i, j, BLOCK_BACKGROUND_COLOR);
                 if (this.game.data[i][j]) {
@@ -139,8 +145,8 @@ class View {
         block.style.backgroundColor = color;
         //根据上级找位置，对象是第一个有位置设置的
         block.style.position = "absolute";
-        block.style.top = ((CANVAS_HEIGHT/**画布大小*/ - (GAME_SIZE/**方块数量 */ * BLOCK_SIZE/**block大小 */)) / 5) * (i + 1) + BLOCK_SIZE * i;
-        block.style.left = ((CANVAS_WIDTH - (GAME_SIZE * BLOCK_SIZE)) / 5) * (j + 1) + BLOCK_SIZE * j;
+        block.style.top = PADDING_SIZE * (i + 1) + BLOCK_SIZE * i;
+        block.style.left = PADDING_SIZE * (j + 1) + BLOCK_SIZE * j;
         this.container.append(block);
         return block;
     }
