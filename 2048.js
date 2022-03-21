@@ -70,18 +70,21 @@ class Game {
             this.data.push(temp);
         }
         //游戏开始，随机给两个block赋值 2
-        this.generateNewBlock();
-        this.generateNewBlock();
+        this.data = this.generateNewBlock(this.data);
+        this.data = this.generateNewBlock(this.data);
     }
     /**
+     *
+     * @param {Array} arr 原数据
+     * @returns 赋值后的数据
      * 随机给一个block赋值
      */
-    generateNewBlock() {
+    generateNewBlock(arr) {
         //首先搜集所有空的位置
         let emptyBlock = [];
         for (let i = 0; i < BLOCK_QUANTITY; i++) {
             for (let j = 0; j < BLOCK_QUANTITY; j++) {
-                if (this.data[i][j] == null) {
+                if (arr[i][j] == null) {
                     //找出空的数组(block)并放进emptyBlock
                     emptyBlock.push([i, j]);
                 }
@@ -90,16 +93,17 @@ class Game {
         //调用randChoice，随机返回emptyBlock中的一个数组(block)
         let position = randChoice(emptyBlock);
         //给这个数组赋值2
-        this.data[position[0]][position[1]] = 2;
+        arr[position[0]][position[1]] = 2;
+        return arr;
     }
 
     /**
      *
      * @param {Array} arr 一个n*n的数组，也就是最开始创建的data[]
-     * @description 方块移动
+     * @returns {Array} arr 传回的值，要进行处理
+     * @description 方块移动,以向左为蓝本进行设计，所以要在传进来之前对数据进行处理
      */
     shiftBlock(arr) {
-        arr = this.data;
         for (let i = 0; i < BLOCK_QUANTITY; i++) {
             //向左
             //先动的
@@ -117,13 +121,15 @@ class Game {
                 } else if (arr[i][behind] != null && arr[i][ahead] != null && arr[i][behind] == arr[i][ahead]) {
                     arr[i][behind] *= 2;
                     arr[i][ahead] = null;
+                    behind++;
                 } else if (arr[i][behind] != null && arr[i][ahead] != null && arr[i][behind] != arr[i][ahead]) {
+                    arr[i][behind + 1] = arr[i][ahead];
+                    arr[i][ahead] = null;
                     behind++;
                 }
             }
         }
-        this.data = arr;
-
+        return this.generateNewBlock(arr);;
     }
 
 
@@ -173,10 +179,12 @@ class View {
     }
 
     /**
+     * @param {Array} arr 用来更新的data[]
      * 更新block
     */
-    refreshBlock() {
-        this.container.innerHTML="";
+    refreshBlock(arr) {
+        this.data = arr;
+        this.container.innerHTML = "";
         this.drawGame();
     }
     /**
@@ -248,3 +256,22 @@ var container = document.getElementById("game-container");
 var game = new Game();
 var view = new View(container, game);
 view.drawGame();
+document.addEventListener('keyup', (e) => {
+    switch (e.keyCode) {
+        case 37:
+            //左
+            console.log(view.game.data);
+            view.refreshBlock(view.game.shiftBlock(view.game.data));
+            break;
+        case 38:
+            //向上
+            break;
+        case 39:
+            //向右
+            break;
+        case 40:
+            //向下
+            break;
+        default:
+    }
+})
