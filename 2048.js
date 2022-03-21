@@ -298,20 +298,57 @@ var game = new Game();
 var view = new View(container, game);
 view.drawGame();
 document.addEventListener('keyup', (e) => {
-    switch (e.keyCode) {
-        case 37:
-            //左
-            break;
-        case 38:
-            //向上
+    if (e.keyCode < 41 && e.keyCode > 36) {
+        switch (e.keyCode) {
+            case 37:
+                //左
+                for (let i = 0; i < BLOCK_QUANTITY; i++) {
+                    game.data[i] = game.shiftBlock2(game.data[i]);
+                }
+                break;
+            case 38:
+                //向上
+                for (let j = 0; j < BLOCK_QUANTITY; j++) {
+                    let arr = [];
+                    for (let i = 0; i < BLOCK_QUANTITY; i++) {
+                        arr.push(game.data[i][j]);
+                    }
+                    arr = game.shiftBlock2(arr);
+                    for (let i = 0; i < BLOCK_QUANTITY; i++) {
+                        game.data[i][j] = arr[i];
+                    }
+                }
 
-            break;
-        case 39:
-            //向右
-            break;
-        case 40:
-            //向下
-            break;
-        default:
+                break;
+            case 39:
+                //向右
+                for (let i = 0; i < BLOCK_QUANTITY; i++) {
+                    let arr = [];
+                    for (let j = BLOCK_QUANTITY - 1; j >= 0; j--) {
+                        arr.push(game.data[i][j]);
+                    }
+                    arr = game.shiftBlock2(arr);
+                    for (let j = BLOCK_QUANTITY - 1; j >= 0; j--) {
+                        game.data[i][j] = arr[BLOCK_QUANTITY - 1 - j];
+                    }
+                }
+                break;
+            case 40:
+                //向下
+                for (let j = 0; j < BLOCK_QUANTITY; j++) {
+                    let arr = [];
+                    for (let i = BLOCK_QUANTITY - 1; i >= 0; i--) {
+                        arr.push(game.data[i][j]);
+                    }
+                    arr = game.shiftBlock2(arr);
+                    for (let i = BLOCK_QUANTITY - 1; i >= 0; i--) {
+                        game.data[i][j] = arr[BLOCK_QUANTITY - 1 - i];
+                    }
+                }
+                break;
+            default:
+        }
+        game.generateNewBlock();
+        view.refreshBlock();
     }
 })
