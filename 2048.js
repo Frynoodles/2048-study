@@ -7,19 +7,19 @@
 CANVAS_HEIGHT = 650;
 CANVAS_WIDTH = 650;
 //画布背景颜色
-CANVAS_BACKGROUND_COLOR = "rgba(255,100,0,0.6)";
+CANVAS_BACKGROUND_COLOR = "rgba(255,182,193,0.6)";
 //block数量
 BLOCK_QUANTITY = 4;
 //block大小
 BLOCK_SIZE = 150;
 //block背景颜色
-BLOCK_BACKGROUND_COLOR = "rgba(248,248,255,0.6)";
+BLOCK_BACKGROUND_COLOR = "rgba(219,112,147,0.6)";
 //block有数字时的颜色
-BLOCK_FRONT_COLOR = "rgba(0,206,209,0.5)";
+BLOCK_FRONT_COLOR = "rgba(100,20,133,0.5)";
+//文字颜色
+TEXT_COLOR = "rgbA(230,120,50,1)";
 //文字大小
 FONTSIZE = 80;
-//文字颜色
-TEXT_COLOR = "rgbA(230,0,0,0.5)";
 //间隔大小
 PADDING_SIZE = (CANVAS_HEIGHT - BLOCK_QUANTITY * BLOCK_SIZE) / (BLOCK_QUANTITY + 1)
 
@@ -176,7 +176,62 @@ class Game {
         return arr;
     }
 
+    /**
+     *
+     * @param {event} e 操作命令
+     * 根据事件判定要采取什么移动
+     */
+    advance(e) {
+        switch (e.keyCode) {
+            case 37:
+                //左
+                for (let i = 0; i < BLOCK_QUANTITY; i++) {
+                    game.data[i] = game.shiftBlock2(game.data[i]);
+                }
+                break;
+            case 38:
+                //向上
+                for (let j = 0; j < BLOCK_QUANTITY; j++) {
+                    let arr = [];
+                    for (let i = 0; i < BLOCK_QUANTITY; i++) {
+                        arr.push(game.data[i][j]);
+                    }
+                    arr = game.shiftBlock2(arr);
+                    for (let i = 0; i < BLOCK_QUANTITY; i++) {
+                        game.data[i][j] = arr[i];
+                    }
+                }
 
+                break;
+            case 39:
+                //向右
+                for (let i = 0; i < BLOCK_QUANTITY; i++) {
+                    let arr = [];
+                    for (let j = BLOCK_QUANTITY - 1; j >= 0; j--) {
+                        arr.push(game.data[i][j]);
+                    }
+                    arr = game.shiftBlock2(arr);
+                    for (let j = BLOCK_QUANTITY - 1; j >= 0; j--) {
+                        game.data[i][j] = arr[BLOCK_QUANTITY - 1 - j];
+                    }
+                }
+                break;
+            case 40:
+                //向下
+                for (let j = 0; j < BLOCK_QUANTITY; j++) {
+                    let arr = [];
+                    for (let i = BLOCK_QUANTITY - 1; i >= 0; i--) {
+                        arr.push(game.data[i][j]);
+                    }
+                    arr = game.shiftBlock2(arr);
+                    for (let i = BLOCK_QUANTITY - 1; i >= 0; i--) {
+                        game.data[i][j] = arr[BLOCK_QUANTITY - 1 - i];
+                    }
+                }
+                break;
+            default:
+        }
+    }
 
 }
 
@@ -299,55 +354,7 @@ var view = new View(container, game);
 view.drawGame();
 document.addEventListener('keyup', (e) => {
     if (e.keyCode < 41 && e.keyCode > 36) {
-        switch (e.keyCode) {
-            case 37:
-                //左
-                for (let i = 0; i < BLOCK_QUANTITY; i++) {
-                    game.data[i] = game.shiftBlock2(game.data[i]);
-                }
-                break;
-            case 38:
-                //向上
-                for (let j = 0; j < BLOCK_QUANTITY; j++) {
-                    let arr = [];
-                    for (let i = 0; i < BLOCK_QUANTITY; i++) {
-                        arr.push(game.data[i][j]);
-                    }
-                    arr = game.shiftBlock2(arr);
-                    for (let i = 0; i < BLOCK_QUANTITY; i++) {
-                        game.data[i][j] = arr[i];
-                    }
-                }
-
-                break;
-            case 39:
-                //向右
-                for (let i = 0; i < BLOCK_QUANTITY; i++) {
-                    let arr = [];
-                    for (let j = BLOCK_QUANTITY - 1; j >= 0; j--) {
-                        arr.push(game.data[i][j]);
-                    }
-                    arr = game.shiftBlock2(arr);
-                    for (let j = BLOCK_QUANTITY - 1; j >= 0; j--) {
-                        game.data[i][j] = arr[BLOCK_QUANTITY - 1 - j];
-                    }
-                }
-                break;
-            case 40:
-                //向下
-                for (let j = 0; j < BLOCK_QUANTITY; j++) {
-                    let arr = [];
-                    for (let i = BLOCK_QUANTITY - 1; i >= 0; i--) {
-                        arr.push(game.data[i][j]);
-                    }
-                    arr = game.shiftBlock2(arr);
-                    for (let i = BLOCK_QUANTITY - 1; i >= 0; i--) {
-                        game.data[i][j] = arr[BLOCK_QUANTITY - 1 - i];
-                    }
-                }
-                break;
-            default:
-        }
+        game.advance(e);
         game.generateNewBlock();
         view.refreshBlock();
     }
