@@ -123,8 +123,10 @@ class Game {
                     arr[i][ahead] = null;
                     behind++;
                 } else if (arr[i][behind] != null && arr[i][ahead] != null && arr[i][behind] != arr[i][ahead]) {
-                    arr[i][behind + 1] = arr[i][ahead];
-                    arr[i][ahead] = null;
+                    if(ahead-behind>1){
+                        arr[i][behind + 1] = arr[i][ahead];
+                        arr[i][ahead] = null;
+                    }
                     behind++;
                 }
             }
