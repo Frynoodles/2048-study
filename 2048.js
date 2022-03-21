@@ -45,7 +45,6 @@ randChoice = function (arr) {
 
 
 
-
 // model
 
 /**
@@ -70,21 +69,20 @@ class Game {
             this.data.push(temp);
         }
         //游戏开始，随机给两个block赋值 2
-        this.data = this.generateNewBlock(this.data);
-        this.data = this.generateNewBlock(this.data);
+        this.generateNewBlock();
+        this.generateNewBlock();
     }
     /**
      *
      * @param {Array} arr 原数据
-     * @returns 赋值后的数据
      * 随机给一个block赋值
      */
-    generateNewBlock(arr) {
+    generateNewBlock() {
         //首先搜集所有空的位置
         let emptyBlock = [];
         for (let i = 0; i < BLOCK_QUANTITY; i++) {
             for (let j = 0; j < BLOCK_QUANTITY; j++) {
-                if (arr[i][j] == null) {
+                if (this.data[i][j] == null) {
                     //找出空的数组(block)并放进emptyBlock
                     emptyBlock.push([i, j]);
                 }
@@ -93,15 +91,14 @@ class Game {
         //调用randChoice，随机返回emptyBlock中的一个数组(block)
         let position = randChoice(emptyBlock);
         //给这个数组赋值2
-        arr[position[0]][position[1]] = 2;
-        return arr;
+        this.data[position[0]][position[1]] = 2;
     }
 
     /**
-     *
      * @param {Array} arr 一个n*n的数组，也就是最开始创建的data[]
-     * @returns {Array} arr 传回的值，要进行处理
-     * @description 方块移动,以向左为蓝本进行设计，所以要在传进来之前对数据进行处理
+     * @returns {Array}传回的值,也就是变化后的值
+     * @description 方块移动,以向左为蓝本进行设计，所以要在传进来之前对数据进行处理.这个思路一次直接移动所有数据，无法复用到所有的方向，根据视频思路进行调整，现已弃用
+     * @deprecated
      */
     shiftBlock(arr) {
         for (let i = 0; i < BLOCK_QUANTITY; i++) {
@@ -112,18 +109,22 @@ class Game {
             let behind = 0;
             for (; ahead < BLOCK_QUANTITY; ahead++) {
                 if (arr[i][behind] == null && arr[i][ahead] == null) {
-
+                    //左右为空
                 } else if (arr[i][behind] == null && arr[i][ahead] != null) {
+                    //左空右不空
                     arr[i][behind] = arr[i][ahead];
                     arr[i][ahead] = null;
                 } else if (arr[i][behind] != null && arr[i][ahead] == null) {
-
+                    //左不空右空
                 } else if (arr[i][behind] != null && arr[i][ahead] != null && arr[i][behind] == arr[i][ahead]) {
+                    左右不空且相同
                     arr[i][behind] *= 2;
                     arr[i][ahead] = null;
                     behind++;
                 } else if (arr[i][behind] != null && arr[i][ahead] != null && arr[i][behind] != arr[i][ahead]) {
-                    if(ahead-behind>1){
+                    //左右不空且不同
+                    if (ahead - behind > 1) {
+                        //中间有空
                         arr[i][behind + 1] = arr[i][ahead];
                         arr[i][ahead] = null;
                     }
@@ -134,8 +135,46 @@ class Game {
         return this.generateNewBlock(arr);;
     }
 
-
-
+    /**
+     *
+     * @param {Array} arr 传入的数据,例[2,2,2,2]
+     * @returns {Array} 改变后的数据
+     * @description 将传入的一位数组推向0号位，例[null,2,2,null]->[4,null,null,null]
+     */
+    shiftBlock2(arr) {
+        let behind = 0;
+        let ahead = 1;
+        while (ahead < arr.length) {
+            if (arr[behind] == null) {
+                if (arr[ahead] == null) {
+                    ahead++;
+                } else if (arr[ahead] != null) {
+                    arr[behind] = arr[ahead];
+                    arr[ahead] = null;
+                    ahead++;
+                }
+            } else if (arr[behind] != null) {
+                if (arr[ahead] == null) {
+                    ahead++;
+                } else if (arr[ahead] != null) {
+                    if (arr[behind] == arr[ahead]) {
+                        arr[behind] *= 2;
+                        arr[ahead] = null;
+                        behind++;
+                        ahead++;
+                    } else if (arr[behind] != arr[ahead]) {
+                        if (ahead - behind > 1) {
+                            arr[behind + 1] = arr[ahead];
+                            arr[ahead] = null;
+                        }
+                        ahead++;
+                        behind++;
+                    }
+                }
+            }
+        }
+        return arr;
+    }
 
 
 
@@ -262,11 +301,10 @@ document.addEventListener('keyup', (e) => {
     switch (e.keyCode) {
         case 37:
             //左
-            console.log(view.game.data);
-            view.refreshBlock(view.game.shiftBlock(view.game.data));
             break;
         case 38:
             //向上
+
             break;
         case 39:
             //向右
