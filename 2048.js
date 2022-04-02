@@ -377,13 +377,14 @@ document.addEventListener('keyup', (e) => {
             }
             oldArr.push(oneArr);
         }
-        console.log("old arr:\n" + oldArr);
+        //        console.log("old arr:\n" + oldArr);
         game.advance(e);
-        console.log("new arr:\n" + game.data)
+        //        console.log("new arr:\n" + game.data)
         if (!arrComp(oldArr, game.data)) {
-            console.log(arrComp(oldArr, game.data));
+            //            console.log(arrComp(oldArr, game.data));
             game.generateNewBlock();
             view.refreshBlock();
         }
+
     }
 })
