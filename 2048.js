@@ -43,7 +43,22 @@ randChoice = function (arr) {
     return arr[randInt(0, arr.length - 1)];
 }
 
-
+/**
+ * @description 比较两个二维数组的值是否相同
+ */
+arrComp = function (arr1, arr2) {
+    if (arr1.length != arr2.length) {
+        return false;
+    }
+    for (let i = 0; i < arr1.length; i++) {
+        for (let j = 0; j < arr1.length; j++) {
+            if (arr1[i][j] != arr2[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 // model
 
@@ -277,7 +292,7 @@ class View {
     /**
      * @param {Array} arr 用来更新的data[]
      * 更新block
-    */
+     */
     refreshBlock(arr) {
         this.data = arr;
         this.container.innerHTML = "";
@@ -325,8 +340,8 @@ class View {
          * 这涉及到line-height的继承关系，如果父类设置了line-height的单位，则直接继承这个单位，父类没设置单位，则是系数属性，所以子类不设单位的情况下就是系数
          * 可参考http://www.yalewoo.com/css_line-height.html?msclkid=9561f828a85811eca83e6b473b37446c
          *
-        */
-        span.style.lineHeight = /*`${BLOCK_SIZE}px`*/BLOCK_SIZE / FONTSIZE;
+         */
+        span.style.lineHeight = /*`${BLOCK_SIZE}px`*/ BLOCK_SIZE / FONTSIZE;
         /**
          * 他用的方法
          * span.style.position="absolute";
@@ -354,8 +369,21 @@ var view = new View(container, game);
 view.drawGame();
 document.addEventListener('keyup', (e) => {
     if (e.keyCode < 41 && e.keyCode > 36) {
+        var oldArr = [];
+        for (let i = 0; i < BLOCK_QUANTITY; i++) {
+            let oneArr = [];
+            for (let j = 0; j < BLOCK_QUANTITY; j++) {
+                oneArr.push(game.data[i][j]);
+            }
+            oldArr.push(oneArr);
+        }
+        console.log("old arr:\n" + oldArr);
         game.advance(e);
-        game.generateNewBlock();
-        view.refreshBlock();
+        console.log("new arr:\n" + game.data)
+        if (!arrComp(oldArr, game.data)) {
+            console.log(arrComp(oldArr, game.data));
+            game.generateNewBlock();
+            view.refreshBlock();
+        }
     }
 })
